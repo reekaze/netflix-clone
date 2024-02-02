@@ -1,5 +1,7 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 import Input from "@/components/Input";
+import axios from "axios";
 import { useCallback, useState } from "react";
 
 type Props = {};
@@ -16,6 +18,18 @@ const AuthPage = (props: Props) => {
       currentVariant === "login" ? "register" : "login"
     );
   }, []);
+
+  const register = useCallback(async () => {
+    try {
+      await axios.post("/api/register", {
+        email,
+        name,
+        password,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }, [email, name, password]);
 
   return (
     <div className="relative h-full bg-[url('/images/hero.jpg')] bg-cover">
