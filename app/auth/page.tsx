@@ -2,6 +2,8 @@
 "use client";
 import Input from "@/components/Input";
 import axios from "axios";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import { useCallback, useState } from "react";
 
 type Props = {};
@@ -10,6 +12,8 @@ const AuthPage = (props: Props) => {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   const [variant, setVariant] = useState("login");
 
@@ -19,17 +23,43 @@ const AuthPage = (props: Props) => {
     );
   }, []);
 
-  const register = useCallback(async () => {
+  const register = async () => {
     try {
-      await axios.post("/api/register", {
+      setIsLoading(true);
+      const res = await axios.post("/api/register", {
         email,
         name,
         password,
       });
+
+      login();
     } catch (error) {
       console.log(error);
+    } finally {
+      setIsLoading(false);
     }
-  }, [email, name, password]);
+  };
+
+  const login = async () => {
+    try {
+      setIsLoading(true);
+      const res = await signIn("credentials", {
+        email,
+        password,
+        redirect: false,
+        callbackUrl: "/",
+      });
+      if (res?.status !== 200) {
+        return alert(res?.error);
+      }
+
+      router.push("/");
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <div className="relative h-full bg-[url('/images/hero.jpg')] bg-cover">
@@ -72,7 +102,11 @@ const AuthPage = (props: Props) => {
                 value={password}
               />
             </div>
-            <button className="bg-red-600 py-3 text-white rounded-md w-full mt-10 hover:bg-red-700 transition">
+            <button
+              disabled={isLoading}
+              onClick={variant === "login" ? login : register}
+              className="bg-red-600 py-3 text-white rounded-md w-full mt-10 hover:bg-red-700 transition"
+            >
               {variant === "login" ? "Login" : "Sign up"}
             </button>
             <p className="text-neutral-500 mt-12">

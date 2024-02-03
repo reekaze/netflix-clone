@@ -1,12 +1,12 @@
 import db from "@/lib/db";
 import { NextApiRequest } from "next";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 import bcrypt from "bcrypt";
 
-export default async function POST(req: NextApiRequest) {
+export async function POST(req: NextRequest) {
   try {
-    const { email, name, password } = req.body;
+    const { email, name, password } = await req.json();
 
     const existingUser = await db.user.findUnique({
       where: {
@@ -16,7 +16,7 @@ export default async function POST(req: NextApiRequest) {
 
     if (existingUser) {
       return NextResponse.json(
-        { error: "Email aken" },
+        { error: "Email taken" },
         {
           status: 422,
         }

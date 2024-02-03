@@ -3,7 +3,7 @@ import { compare } from "bcrypt";
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 
-export default NextAuth({
+const handler = NextAuth({
   providers: [
     Credentials({
       id: "credentials",
@@ -38,6 +38,7 @@ export default NextAuth({
           user.hashedPassword
         );
 
+        console.log(credentials.password, user.email, user.hashedPassword);
         if (!isCorrectPassword) {
           throw new Error("Incorrect password");
         }
@@ -58,3 +59,5 @@ export default NextAuth({
   },
   secret: process.env.NEXTAUTH_SECRET,
 });
+
+export { handler as GET, handler as POST };
