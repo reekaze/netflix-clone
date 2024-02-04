@@ -1,11 +1,6 @@
-import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { authOptions } from "./app/api/auth/[...nextauth]/route";
 import { getToken } from "next-auth/jwt";
-import { getSession } from "next-auth/react";
-import { NextApiRequest } from "next";
-// This function can be marked `async` if using `await` inside
 export async function middleware(req: NextRequest) {
   const secret = process.env.NEXTAUTH_JWT_SECRET;
 

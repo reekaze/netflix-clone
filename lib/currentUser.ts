@@ -1,8 +1,8 @@
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import db from "./db";
 import { signOut } from "next-auth/react";
+import { authOptions } from "./authOptions";
 
 export const currentUser = async () => {
   const session = await getServerSession(authOptions);
