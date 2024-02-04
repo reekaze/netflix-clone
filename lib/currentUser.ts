@@ -8,7 +8,7 @@ export const currentUser = async () => {
   const session = await getServerSession(authOptions);
 
   if (!session) {
-    return redirect("/auth");
+    throw new Error("Not signed in");
   }
 
   const currentUser = await db.user.findUnique({
