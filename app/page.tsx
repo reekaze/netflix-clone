@@ -4,6 +4,8 @@ import { getServerSession } from "next-auth";
 import { redirect, useRouter } from "next/navigation";
 import { authOptions } from "./api/auth/[...nextauth]/route";
 import { currentUser } from "@/lib/currentUser";
+import Navbar from "@/components/Navbar";
+import Billboard from "@/components/Billboard";
 
 type props = {
   req: NextApiRequest;
@@ -20,9 +22,8 @@ export default async function Home({ req }: props) {
 
   return (
     <>
-      <h1 className="text-2xl text-green-500">Netflix Clone</h1>
-      <p className="text-white">{user.email}</p>
-      <Logout />
+      <Navbar />
+      <Billboard />
     </>
   );
 }

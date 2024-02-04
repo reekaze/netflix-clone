@@ -2,6 +2,7 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import db from "./db";
+import { signOut } from "next-auth/react";
 
 export const currentUser = async () => {
   const session = await getServerSession(authOptions);
@@ -17,6 +18,7 @@ export const currentUser = async () => {
   });
 
   if (!currentUser) {
+    signOut();
     return redirect("/auth");
   }
 
