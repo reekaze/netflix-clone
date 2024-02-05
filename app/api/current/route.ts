@@ -1,9 +1,7 @@
 import { currentUser } from "@/lib/currentUser";
-import serverAuth from "@/lib/serverAuth";
-import { NextApiRequest } from "next";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(req: NextApiRequest) {
+export async function GET(req: NextRequest) {
   try {
     const user = await currentUser();
 
