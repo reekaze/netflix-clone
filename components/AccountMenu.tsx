@@ -1,4 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
+import useCurrentUser from "@/hooks/useCurrentUser";
 import { signOut } from "next-auth/react";
 import React from "react";
 
@@ -7,6 +8,7 @@ type AccountMenuProps = {
 };
 
 const AccountMenu = ({ visible }: AccountMenuProps) => {
+  const { data } = useCurrentUser();
   if (!visible) {
     return null;
   }
@@ -21,7 +23,7 @@ const AccountMenu = ({ visible }: AccountMenuProps) => {
             alt="image"
           />
           <p className="text-white text-sm group-hover/item:underline">
-            username
+            {data?.name}
           </p>
         </div>
         <hr className="bg-gray-600 border-0 h-px my-4" />
