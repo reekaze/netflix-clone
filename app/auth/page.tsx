@@ -1,12 +1,15 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 import Input from "@/components/Input";
+import { ToastAction } from "@/components/ui/toast";
+import { toast, useToast } from "@/components/ui/use-toast";
 import axios from "axios";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useCallback, useState } from "react";
 import { FaGithub } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
+import { ImSpinner2 } from "react-icons/im";
 
 type Props = {};
 
@@ -18,6 +21,7 @@ const AuthPage = (props: Props) => {
   const router = useRouter();
 
   const [variant, setVariant] = useState("login");
+  const { toast } = useToast();
 
   const toggleVariant = useCallback(() => {
     setVariant((currentVariant) =>
@@ -28,11 +32,18 @@ const AuthPage = (props: Props) => {
   const register = async () => {
     try {
       setIsLoading(true);
+
       const res = await axios.post("/api/register", {
         email,
         name,
         password,
       });
+
+      if (res?.data?.error != null) {
+        return toast({
+          description: res.data.error,
+        });
+      }
 
       login();
     } catch (error) {
@@ -53,7 +64,9 @@ const AuthPage = (props: Props) => {
       });
 
       if (res?.status !== 200) {
-        return alert(res?.error);
+        return toast({
+          description: res?.error,
+        });
       }
       return router.push("/profiles");
     } catch (error) {
@@ -107,9 +120,14 @@ const AuthPage = (props: Props) => {
             <button
               disabled={isLoading}
               onClick={variant === "login" ? login : register}
-              className="bg-red-600 py-3 text-white rounded-md w-full mt-10 hover:bg-red-700 transition"
+              className="bg-red-600 py-3 text-white rounded-md w-full mt-10 hover:bg-red-700 transition flex items-center justify-center gap-2"
             >
               {variant === "login" ? "Login" : "Sign up"}
+              {isLoading && (
+                <span className="text-white animate-spin">
+                  <ImSpinner2 />
+                </span>
+              )}
             </button>
 
             <div className="flex flex-row items-center gap-4 mt-8 justify-center">

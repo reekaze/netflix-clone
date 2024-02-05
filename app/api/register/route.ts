@@ -7,6 +7,15 @@ export async function POST(req: NextRequest) {
   try {
     const { email, name, password } = await req.json();
 
+    if (!email || !name || !password) {
+      return NextResponse.json(
+        { error: "Username, email and password required" },
+        {
+          status: 201,
+        }
+      );
+    }
+
     const existingUser = await db.user.findUnique({
       where: {
         email,
@@ -15,9 +24,9 @@ export async function POST(req: NextRequest) {
 
     if (existingUser) {
       return NextResponse.json(
-        { error: "Email taken" },
+        { error: "Email has been taken" },
         {
-          status: 422,
+          status: 201,
         }
       );
     }
