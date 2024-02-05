@@ -1,18 +1,21 @@
+"use client";
 import { NextApiRequest } from "next";
-import { currentUser } from "@/lib/currentUser";
 import Navbar from "@/components/Navbar";
 import Billboard from "@/components/Billboard";
 import AllList from "@/components/AllList";
+import InfoModal from "@/components/InfoModal";
+import useInfoModal from "@/hooks/useInfoModal";
 
 type props = {
   req: NextApiRequest;
 };
 
-export default async function Home({ req }: props) {
-  const user = await currentUser();
+export default function Home({ req }: props) {
+  const { isOpen, closeModal } = useInfoModal();
 
   return (
     <>
+      <InfoModal visible={isOpen} onClose={closeModal} />
       <Navbar />
       <Billboard />
       <AllList />
