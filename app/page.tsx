@@ -6,11 +6,7 @@ import AllList from "@/components/AllList";
 import InfoModal from "@/components/InfoModal";
 import useInfoModal from "@/hooks/useInfoModal";
 
-type props = {
-  req: NextApiRequest;
-};
-
-export default function Home({ req }: props) {
+export default function Home() {
   const { isOpen, closeModal } = useInfoModal();
 
   return (
