@@ -29,7 +29,9 @@ const AuthPage = (props: Props) => {
     );
   }, []);
 
-  const register = async () => {
+  const register = async (e: any) => {
+    e.preventDefault();
+
     try {
       setIsLoading(true);
 
@@ -45,7 +47,7 @@ const AuthPage = (props: Props) => {
         });
       }
 
-      login();
+      login(e);
     } catch (error) {
       console.log(error);
     } finally {
@@ -53,7 +55,9 @@ const AuthPage = (props: Props) => {
     }
   };
 
-  const login = async () => {
+  const login = async (e: any) => {
+    e.preventDefault();
+
     try {
       setIsLoading(true);
 
@@ -79,93 +83,100 @@ const AuthPage = (props: Props) => {
   return (
     <div className="relative h-full bg-[url('/images/hero.jpg')] bg-cover">
       <div className="bg-black w-full h-full lg:bg-opacity-50">
-        <nav className="px-12 py-5">
-          <img src="/images/logo.png" alt="logo" className="h-12" />
-        </nav>
-        <div className="flex justify-center">
-          <div className="bg-black bg-opacity-70 p-16 self-center mt-2 lg:w-2/5 lg:max-w-md rounded-md w-full">
-            <h2 className="text-white text-4xl mb-8 font-semibold">
-              {variant === "login" ? "Sign in" : "Register"}
-            </h2>
-            <div className="flex flex-col gap-4">
-              {variant === "register" && (
+        <form
+          onSubmit={(e: any) => {
+            variant === "login" ? login(e) : register(e);
+          }}
+        >
+          <nav className="px-12 py-5">
+            <img src="/images/logo.png" alt="logo" className="h-12" />
+          </nav>
+          <div className="flex justify-center">
+            <div className="bg-black bg-opacity-70 p-16 self-center mt-2 lg:w-2/5 lg:max-w-md rounded-md w-full">
+              <h2 className="text-white text-4xl mb-8 font-semibold">
+                {variant === "login" ? "Sign in" : "Register"}
+              </h2>
+              <div className="flex flex-col gap-4">
+                {variant === "register" && (
+                  <Input
+                    label="Username"
+                    onChange={(e) => {
+                      setName(e.target.value);
+                    }}
+                    id="name"
+                    value={name}
+                  />
+                )}
+
                 <Input
-                  label="Username"
+                  label="Email"
                   onChange={(e) => {
-                    setName(e.target.value);
+                    setEmail(e.target.value);
                   }}
-                  id="name"
-                  value={name}
+                  id="email"
+                  type="email"
+                  value={email}
                 />
-              )}
-              <Input
-                label="Email"
-                onChange={(e) => {
-                  setEmail(e.target.value);
-                }}
-                id="email"
-                type="email"
-                value={email}
-              />
-              <Input
-                label="Password"
-                onChange={(e) => {
-                  setPassword(e.target.value);
-                }}
-                id="password"
-                type="password"
-                value={password}
-              />
-            </div>
-            <button
-              disabled={isLoading}
-              onClick={variant === "login" ? login : register}
-              className="bg-red-600 py-3 text-white rounded-md w-full mt-10 hover:bg-red-700 transition flex items-center justify-center gap-2"
-            >
-              {variant === "login" ? "Login" : "Sign up"}
-              {isLoading && (
-                <span className="text-white animate-spin">
-                  <ImSpinner2 />
+                <Input
+                  label="Password"
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                  }}
+                  id="password"
+                  type="password"
+                  value={password}
+                />
+              </div>
+              <button
+                type="submit"
+                disabled={isLoading}
+                className="bg-red-600 py-3 text-white rounded-md w-full mt-10 hover:bg-red-700 transition flex items-center justify-center gap-2"
+              >
+                {variant === "login" ? "Login" : "Sign up"}
+                {isLoading && (
+                  <span className="text-white animate-spin">
+                    <ImSpinner2 />
+                  </span>
+                )}
+              </button>
+
+              <div className="flex flex-row items-center gap-4 mt-8 justify-center">
+                <div
+                  onClick={() =>
+                    signIn("google", {
+                      callbackUrl: "/profiles",
+                    })
+                  }
+                  className="w-10 h-10 bg-white rounded-full flex items-center justify-center cursor-pointer hover:opacity-80 transition"
+                >
+                  <FcGoogle size={30} />
+                </div>
+                <div
+                  onClick={() =>
+                    signIn("github", {
+                      callbackUrl: "/profiles",
+                    })
+                  }
+                  className="w-10 h-10 bg-white rounded-full flex items-center justify-center cursor-pointer hover:opacity-80 transition"
+                >
+                  <FaGithub size={30} />
+                </div>
+              </div>
+
+              <p className="text-neutral-500 mt-12">
+                {variant === "login"
+                  ? "First time using Netflix?"
+                  : "Already had an account"}
+                <span
+                  onClick={toggleVariant}
+                  className="text-white ml-1 hover:underline cursor-pointer"
+                >
+                  {variant === "login" ? "Create an account" : "Login"}
                 </span>
-              )}
-            </button>
-
-            <div className="flex flex-row items-center gap-4 mt-8 justify-center">
-              <div
-                onClick={() =>
-                  signIn("google", {
-                    callbackUrl: "/profiles",
-                  })
-                }
-                className="w-10 h-10 bg-white rounded-full flex items-center justify-center cursor-pointer hover:opacity-80 transition"
-              >
-                <FcGoogle size={30} />
-              </div>
-              <div
-                onClick={() =>
-                  signIn("github", {
-                    callbackUrl: "/profiles",
-                  })
-                }
-                className="w-10 h-10 bg-white rounded-full flex items-center justify-center cursor-pointer hover:opacity-80 transition"
-              >
-                <FaGithub size={30} />
-              </div>
+              </p>
             </div>
-
-            <p className="text-neutral-500 mt-12">
-              {variant === "login"
-                ? "First time using Netflix?"
-                : "Already had an account"}
-              <span
-                onClick={toggleVariant}
-                className="text-white ml-1 hover:underline cursor-pointer"
-              >
-                {variant === "login" ? "Create an account" : "Login"}
-              </span>
-            </p>
           </div>
-        </div>
+        </form>
       </div>
     </div>
   );
